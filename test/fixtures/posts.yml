@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  title: First Sample Title
+  body: A sample of text.
+
+two:
+  title: Second Sample Title
+  body: Another sample of text.
