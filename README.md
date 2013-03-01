@@ -115,10 +115,10 @@ You get the file structure for free. This is helpful and, even if these files ar
 
 Let's set up some seed data in your _db/seeds.rb_ file…
 
-  Post.create(
-    title: 'A Sample Post',
-    body: 'This will be a simple post record.'
-  )
+    Post.create(
+      title: 'A Sample Post',
+      body: 'This will be a simple post record.'
+    )
 
 Now, create/migration/seed your database…
 
@@ -128,15 +128,15 @@ Now, create/migration/seed your database…
 
 Okay, so we now have a resource, but I think the route Rails just gave us needs some help becoming an API for our new Ember.js client. So, let's make the _config/routes.rb_ look more like…
 
-  EmberTester::Application.routes.draw do
-    namespace :api do
-      namespace :v1 do
-        resources :posts
+    EmberTester::Application.routes.draw do
+      namespace :api do
+        namespace :v1 do
+          resources :posts
+        end
       end
-    end
 
-    root :to => 'ember#start'
-  end
+      root :to => 'ember#start'
+    end
 
 And, fix the _app/controllers/posts_controller.rb_. First, let's move it to the correct spot for our new API::V1 module…
 
@@ -150,33 +150,33 @@ And its test…
 
 Also, we need to modulerize that PostsController. While we are in there, let's just give it some basic functionality of show and index actions…
 
-  class Api::V1::PostsController < ApplicationController
-    respond_to :json
+    class Api::V1::PostsController < ApplicationController
+      respond_to :json
 
-    def index
-      respond_with Post.all
-    end
+      def index
+        respond_with Post.all
+      end
 
-    def show
-      respond_with Post.find(params[:id])
+      def show
+        respond_with Post.find(params[:id])
+      end
     end
-  end
 
 Same with the test (spice it up with some actual testing too)…
 
-  require 'test_helper'
+    require 'test_helper'
 
-  class Api::V1::PostsControllerTest < ActionController::TestCase
-    test "should get index" do
-      get :index, format: :json
-      assert_response :success
-    end
+    class Api::V1::PostsControllerTest < ActionController::TestCase
+      test "should get index" do
+        get :index, format: :json
+        assert_response :success
+      end
 
-    test "should get show" do
-      get :show, id: Post.first.id, format: :json
-      assert_response :success
+      test "should get show" do
+        get :show, id: Post.first.id, format: :json
+        assert_response :success
+      end
     end
-  end
 
 Yes, I know you can use some fancy pants API builder gem, but this is supposed to be a simple example application.
 
@@ -208,12 +208,12 @@ Ember.js does a lot for you. It gets everyone all bound up for you. Just waiting
 
 First off, we need to tell Ember.js that we are foolin' and moved the API into our own little secret path. In the _app/assets/javascripts/store.js_…
 
-  EmberTester.Store = DS.Store.extend({
-    revision: 11,
-    adapter: DS.RESTAdapter.create({
-      namespace: 'api/v1'
-    })
-  });
+    EmberTester.Store = DS.Store.extend({
+      revision: 11,
+      adapter: DS.RESTAdapter.create({
+        namespace: 'api/v1'
+      })
+    });
 
 Ember.js's Store is like the _config/database.yml_ in Rails. It tells [ember-data](https://github.com/emberjs/data) where to get data for it's models. It sets up all the adapters so you can have any data source backing your Ember.js application.
 
@@ -225,21 +225,21 @@ Now, we should route users around. Create a new route file for our Posts index�
 
 Fill it in…
 
-  EmberTester.PostsRoute = Ember.Route.extend({
-    model: function() {
-      return EmberTester.Post.find();
-    }
-  });
+    EmberTester.PostsRoute = Ember.Route.extend({
+      model: function() {
+        return EmberTester.Post.find();
+      }
+    });
 
 The _model_ function now just returns all the Post records in our Store.
 
 Now, in our _app/javascripts/router.js_ we can connect the routes to the resources…
 
-  EmberTester.Router.map(function() {
-    this.resource('posts', function() {
-      this.resource('post', { path: ':post_id' });
+    EmberTester.Router.map(function() {
+      this.resource('posts', function() {
+        this.resource('post', { path: ':post_id' });
+      });
     });
-  });
 
 Nesting these routes makes the _{{outlet}}_ areas of the templates work to render inside each other. _{{outlet}}_ works like _yield_ in Rails. Nesting routes should happen when the user-interface deems it nested as well.
 
@@ -247,39 +247,39 @@ Nesting these routes makes the _{{outlet}}_ areas of the templates work to rende
 
 Let's edit up our _app/assets/javascripts/templates/application.handlebars_ template and add some navigation…
 
-  <header id="header">
-    <h2>{{#linkTo "index"}}Home{{/linkTo}}</h2>
+    <header id="header">
+      <h2>{{#linkTo "index"}}Home{{/linkTo}}</h2>
 
-    <nav>
-      <ul>
-        <li>{{#linkTo "posts"}}Posts{{/linkTo}}</li>
-      </ul>
-    </nav>
-  </header>
+      <nav>
+        <ul>
+          <li>{{#linkTo "posts"}}Posts{{/linkTo}}</li>
+        </ul>
+      </nav>
+    </header>
 
-  <div id="content">
-  {{outlet}}
-  </div>
+    <div id="content">
+    {{outlet}}
+    </div>
 
 The _app/assets/javascripts/templates/posts.handlebars_ template…
 
-  <h1>Posts</h1>
+    <h1>Posts</h1>
 
-  <ul>
-  {{#each post in controller}}
-    <li>{{#linkTo 'post' post}}{{post.title}}{{/linkTo}}</li>
-  {{else}}
-    <li>There are no posts.</li>
-  {{/each}}
-  </ul>
+    <ul>
+    {{#each post in controller}}
+      <li>{{#linkTo 'post' post}}{{post.title}}{{/linkTo}}</li>
+    {{else}}
+      <li>There are no posts.</li>
+    {{/each}}
+    </ul>
 
-  {{outlet}}
+    {{outlet}}
 
 And, finally the _app/assets/javascripts/templates/post.handlebars_ template…
 
-  <h1>{{title}}</h1>
+    <h1>{{title}}</h1>
 
-  <p>{{body}}</p>
+    <p>{{body}}</p>
 
 You're done. Take a deep breath.
 
