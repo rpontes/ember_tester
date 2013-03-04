@@ -26,13 +26,11 @@ Now, the nomenclature is a bit different from Rails in Ember.js, but it makes se
 
 This tool promises to make debugging Ember.js applications much easier. Debugging is often painful because most of Ember.js lives in memory and not in files. The Ember Extension is a Chrome Extension that works with the Web Inspector Tools.
 
-The Tildeio Team seems to still be working out its kinks. But, here are some resources I've found useful so far…
+The Tilde Team seems to still be working out its kinks. But, here are some resources I've found useful so far…
 
 * [Trying the Ember Inspector Out](http://www.kaspertidemann.com/how-to-try-out-the-ember-inspector-in-google-chrome)
 * [Yehuda's Demo](https://www.youtube.com/watch?v=18OSYuhk0Yo&hd=1)
 * [GitHub](https://github.com/tildeio/ember-extension)
-
-_NOTE: I couldn't get master working in the latest Chrome beta even after following the instructions, but I did get this SHA, 043e2cd230f91602ede9501cdedd5e64aab0c905, working. So, just, yeah… wait for it unless you love tinkering like me._
 
 ## Installing Ember.js with Rails
 
@@ -45,6 +43,10 @@ Let me be honest, this is super easy for a green project, but probably not the e
 So, let's take the pie-in-the-sky route…
 
     rails new ember_tester -d postgresql
+
+If you're using the PostgreSQL database, create the role and give it access with the superuser flag...
+
+    createuser ember_tester -s
 
 Bewm. Rails. With PostgreSQL (Heroku friendly, but not necessary).
 
